@@ -1,0 +1,1 @@
+CREATE TABLE utilisateur(nom varchar(100),prenom varchar(100),ville varchar(255))

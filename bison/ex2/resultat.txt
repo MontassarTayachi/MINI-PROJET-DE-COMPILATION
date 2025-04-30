@@ -1,0 +1,1 @@
+Syntaxe correcte : CREATE TABLE.

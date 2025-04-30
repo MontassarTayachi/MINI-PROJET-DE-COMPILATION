@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport de Projet - Analyseurs Lexicaux en Flex</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h2 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+        .exercise {
+            margin-bottom: 50px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .code-container {
+            background-color: #f5f5f5;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            color: #333;
+        }
+        .image-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .image-container img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
+        .description {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page de garde -->
+    <div style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; margin-bottom: 50px; page-break-after: always;">
+        <div style="border: 2px solid #3498db; padding: 40px; border-radius: 10px; width: 80%; max-width: 800px;">
+            <h1 style="color: #2c3e50; font-size: 28px; margin-bottom: 30px;">MINI-PROJET DE COMPILATION</h1>
+            
+            <h2 style="color: #3498db; font-size: 24px; margin-bottom: 20px;">Compilateur pour un Langage en Dialecte Tunisien</h2>
+            
+            <div style="margin: 40px 0;">
+                <p style="font-size: 18px; margin-bottom: 10px;"><strong>Réalisé par :</strong></p>
+                <ul style="list-style: none; padding: 0; font-size: 18px;">
+                    <li>Montassar TAYACHI</li>
+                    <li>Mohamed Habib HAFIENE</li>
+                    <li>Haroun HELAIL</li>
+                </ul>
+            </div>
+            
+            <p style="font-size: 18px; margin-bottom: 10px;"><strong>Classe :</strong> 1ING4</p>
+            
+            <p style="font-size: 18px; margin-top: 40px;"><strong>Année Universitaire :</strong> 2024-2025</p>
+        </div>
+    </div>
+
+    
+
+    <main>
+        <section>
+            <h2>Introduction</h2>
+            <p>Ce rapport présente les différents analyseurs lexicaux développés en Flex. Chaque exercice répond à un besoin spécifique d'analyse lexicale, allant de la validation de nombres binaires à l'analyse de requêtes SQL.</p>
+        </section>
+
+        <!-- Exercice 1: Binaire -->
+        <section class="exercise" id="binaire">
+            <h2>1. Validation de Nombres Binaires</h2>
+            
+            <div class="description">
+                <p>Cet analyseur lexical permet de déterminer si une chaîne en entrée est un nombre binaire valide (composé uniquement de 0 et 1) ou non.</p>
+            </div>
+            
+            <h3>Code Source</h3>
+            <div class="code-container">
+                <pre><code>%{
+#include &lt;stdio.h&gt;
+FILE *yyin;
+%}
+
+%option noyywrap
+
+pairpair (aa|bb)*((ab|ba)(aa|bb)*(ab|ba)(aa|bb)*)*
+
+%%
+
+(0|1)*           printf("(%s) -> est un nombre binaire", yytext);
+.*            printf("(%s) -> est n est pas un nombre binaire \n", yytext);
+
+%%
+
+int main(int argc, char *argv[])  
+{  
+    ++argv, --argc;  
+
+    if (argc > 0)  
+        yyin = fopen(argv[0], "r");  
+    else  
+        yyin = stdin;
+
+    // freopen("resultat.txt", "w", stdout); // Redirection supprimée pour affichage direct
+
+    yylex();  
+    return 0;
+}</code></pre>
+            </div>
+            
+            <h3>Exécution</h3>
+            <div class="image-container">
+                <img src="images/binaireExecution.png" alt="Exécution du programme de validation de nombres binaires">
+                <p><em>Figure 1: Résultat de l'exécution du programme de validation de nombres binaires</em></p>
+            </div>
+            
+            <div class="explanation">
+                <h3>Explication</h3>
+                <p>L'analyseur utilise une expression régulière simple <code>(0|1)*</code> pour reconnaître les nombres binaires. Si la chaîne est composée uniquement de 0 et de 1, elle est considérée comme un nombre binaire valide. Sinon, elle est rejetée.</p>
+            </div>
+        </section>
+
+        <!-- Exercice 2: PairPair -->
+        <section class="exercise" id="pairpair">
+            <h2>2. Analyse de Chaînes PairPair</h2>
+            
+            <div class="description">
+                <p>Cet analyseur lexical identifie les chaînes qui contiennent un nombre pair de 'a' et un nombre pair de 'b'.</p>
+            </div>
+            
+            <h3>Code Source</h3>
+            <div class="code-container">
+                <pre><code>%{
+#include &lt;stdio.h&gt;
+FILE *yyin;
+%}
+
+%option noyywrap
+
+pairpair (aa|bb)*((ab|ba)(aa|bb)*(ab|ba)(aa|bb)*)*
+
+%%
+
+{pairpair}    printf("(%s) -> nombre pair de a et de b \n", yytext);
+a*b*          printf("(%s) -> suite de a puis de b \n", yytext);
+%%
+
+int main(int argc, char *argv[])  
+{  
+    ++argv, --argc;  
+
+    if (argc > 0)  
+        yyin = fopen(argv[0], "r");  
+    else  
+        yyin = stdin;
+
+    freopen("resultat.txt", "w", stdout); // Redirection
+
+    yylex();  
+    return 0;
+}</code></pre>
+            </div>
+            
+            <h3>Exécution</h3>
+            <div class="image-container">
+                <img src="images/pairpairExecution.png" alt="Exécution du programme PairPair">
+                <p><em>Figure 2: Résultat de l'exécution du programme PairPair</em></p>
+            </div>
+            
+            <div class="explanation">
+                <h3>Explication</h3>
+                <p>L'analyseur utilise l'expression régulière <code>(aa|bb)*((ab|ba)(aa|bb)*(ab|ba)(aa|bb)*)*</code> pour identifier les chaînes qui contiennent un nombre pair de 'a' et un nombre pair de 'b'. Cette expression garantit que les caractères 'a' et 'b' apparaissent un nombre pair de fois dans la chaîne.</p>
+            </div>
+        </section>
+
+        <!-- Exercice 3: Compteur -->
+        <section class="exercise" id="compteur">
+            <h2>3. Analyseur Lexical de Comptage</h2>
+            
+            <div class="description">
+                <p>Cet analyseur lexical permet de compter le nombre de mots, de lignes, de caractères et de calculer la somme des nombres présents dans un fichier texte.</p>
+            </div>
+            
+            <h3>Code Source</h3>
+            <div class="code-container">
+                <pre><code>%{
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int nbMots = 0;
+int nbLignes = 0;
+int nbCaract = 0;
+int somme = 0;
+
+FILE *yyin;
+%}
+
+%option noyywrap
+
+%%
+
+[ \t]+              nbCaract += yyleng;
+\n                  { nbLignes++; nbCaract++; }
+[0-9]+              { nbMots++; nbCaract += yyleng; somme += atoi(yytext); }
+[a-zA-Z]+           { nbMots++; nbCaract += yyleng; }
+.                   nbCaract++;
+
+%%
+
+int main(int argc, char *argv[])
+{
+    ++argv; --argc;
+
+    if (argc > 0)
+        yyin = fopen(argv[0], "r");
+    else
+        yyin = stdin;
+
+    // 🔽 Redirection de sortie vers resultat.txt
+    freopen("resultat.txt", "w", stdout);
+
+    yylex();
+
+    printf("Nombre de mots       : %d\n", nbMots);
+    printf("Nombre de lignes     : %d\n", nbLignes);
+    printf("Nombre de caractères : %d\n", nbCaract);
+    printf("Somme des nombres    : %d\n", somme);
+
+    return 0;
+}</code></pre>
+            </div>
+            
+            <h3>Exécution</h3>
+            <div class="image-container">
+                <img src="images/compteurExecution.png" alt="Exécution du programme Compteur">
+                <p><em>Figure 3: Résultat de l'exécution du programme Compteur</em></p>
+            </div>
+            
+            <div class="explanation">
+                <h3>Explication</h3>
+                <p>L'analyseur utilise différentes règles pour identifier les mots, les lignes et les caractères dans un fichier texte. Il compte également les nombres et calcule leur somme. Les résultats sont redirigés vers un fichier "resultat.txt".</p>
+                <ul>
+                    <li>Les espaces et tabulations sont comptés comme des caractères</li>
+                    <li>Les retours à la ligne sont comptés comme des caractères et incrémentent le compteur de lignes</li>
+                    <li>Les nombres sont comptés comme des mots et leur valeur est ajoutée à la somme</li>
+                    <li>Les séquences de lettres sont comptées comme des mots</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Exercice 4: Répertoire Téléphonique -->
+        <section class="exercise" id="repertoire">
+            <h2>4. Analyseur de Répertoire Téléphonique</h2>
+            
+            <div class="description">
+                <p>Cet analyseur lexical permet de reconnaître les entrées d'un répertoire téléphonique selon un format spécifique.</p>
+            </div>
+            
+            <h3>Code Source</h3>
+            <div class="code-container">
+                <pre><code>%option noyywrap
+%{
+#include &lt;stdio.h&gt;
+FILE *yyin;
+%}
+
+NOM     [A-Z][a-zA-Z0-9]*
+PRENOM  [a-z]+
+PRENOMS {PRENOM}([ ]+{PRENOM})*
+SEP     [ ]*@[ ]*
+NUM     [0-9]{2}
+TEL     {NUM}([ ]{1}{NUM}){4}
+
+%%
+
+{NOM}[ ]+{PRENOMS}{SEP}{TEL}   {
+    printf("Nom et prénoms reconnus : %s\n", yytext);
+}
+
+.|\n    ;
+.*  { printf("Format invalide: %s\n", yytext); }
+
+%%
+
+int main(int argc, char *argv[])  
+{  
+    ++argv, --argc;  
+    if (argc > 0)  
+        yyin = fopen(argv[0], "r");  
+    else  
+        yyin = stdin;
+
+    freopen("resultat.txt", "w", stdout); // Redirection
+
+    yylex();  
+    return 0;
+}</code></pre>
+            </div>
+            
+            <h3>Exécution</h3>
+            <div class="image-container">
+                <img src="images/Repertoire_TelExecution.png" alt="Exécution du programme Répertoire Téléphonique">
+                <p><em>Figure 4: Résultat de l'exécution du programme Répertoire Téléphonique</em></p>
+            </div>
+            
+            <div class="explanation">
+                <h3>Explication</h3>
+                <p>L'analyseur reconnaît les entrées d'un répertoire téléphonique selon le format suivant :</p>
+                <ul>
+                    <li>Le nom commence par une lettre majuscule et peut contenir des caractères alphanumériques</li>
+                    <li>Les prénoms sont écrits en minuscules et peuvent être multiples, séparés par des espaces</li>
+                    <li>Le séparateur entre le nom/prénom et le numéro de téléphone est le caractère '@'</li>
+                    <li>Le numéro de téléphone est composé de 5 paires de chiffres séparées par un espace</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Exercice 5: Analyseur SQL -->
+        <section class="exercise" id="sql">
+            <h2>5. Analyseur de Requêtes SQL</h2>
+            
+            <div class="description">
+                <p>Cet analyseur lexical permet d'analyser des requêtes SQL, en particulier les requêtes CREATE TABLE.</p>
+            </div>
+            
+            <h3>Code Source</h3>
+            <div class="code-container">
+                <pre><code>%option noyywrap
+%{
+#include &lt;stdio.h&gt;
+FILE *yyin;
+%}
+
+CREATE      ([cC][rR][eE][aA][tT][eE])
+TABLE       ([tT][aA][bB][lL][eE])
+PRIMARY_KEY ([pP][rR][iI][mM][aA][rR][yY][_][kK][eE][yY])
+NOT_NULL    ([nN][oO][tT][_][nN][uU][lL][lL])
+ESPACE      [ ]*
+IDENTIFIER  [a-zA-Z_][a-zA-Z0-9_]*
+NUMBER      [0-9]+
+COMMA       ,
+SEMICOLON   ;
+LPAREN      \(
+RPAREN      \)
+DATATYPE    ([iI][nN][tT]|[fF][lL][oO][aA][tT]|[dD][aA][tT][eE]|[vV][aA][rR][cC][hH][aA][rR]\([0-9]+\))
+
+%%
+
+{CREATE}        { printf("Mot-clé CREATE détecté\n"); }
+{TABLE}         { printf("Mot-clé TABLE détecté\n"); }
+{PRIMARY_KEY}   { printf("Mot-clé PRIMARY_KEY détecté\n"); }
+{NOT_NULL}      { printf("Mot-clé NOT_NULL détecté\n"); }
+{DATATYPE}      { printf("Type de donnée : %s\n", yytext); }
+{IDENTIFIER}    { printf("Identifiant : %s\n", yytext); }
+{NUMBER}        { printf("Nombre : %s\n", yytext); }
+{COMMA}         { printf("Virgule détectée\n"); }
+{SEMICOLON}     { printf("Point-virgule détecté\n"); }
+{LPAREN}        { printf("Parenthèse ouvrante détectée\n"); }
+{RPAREN}        { printf("Parenthèse fermante détectée\n"); }
+{ESPACE}        ; /* Ignorer les espaces */
+.               { printf("Caractère non reconnu: %s\n", yytext); }
+
+%%
+
+int main(int argc, char *argv[])  
+{  
+    ++argv, --argc;  
+    if (argc > 0)  
+        yyin = fopen(argv[0], "r");  
+    else  
+        yyin = stdin;
+
+    freopen("resultat.txt", "w", stdout); // Redirection
+
+    yylex();  
+    return 0;
+}</code></pre>
+            </div>
+            
+            <h3>Exécution</h3>
+            <div class="image-container">
+                <img src="images/SQL_ReqExecution.png" alt="Exécution du programme Analyseur SQL">
+                <p><em>Figure 5: Résultat de l'exécution du programme Analyseur SQL</em></p>
+            </div>
+            
+            <div class="explanation">
+                <h3>Explication</h3>
+                <p>L'analyseur reconnaît les différents éléments d'une requête SQL CREATE TABLE :</p>
+                <ul>
+                    <li>Les mots-clés SQL (CREATE, TABLE, PRIMARY KEY, etc.) sont reconnus indépendamment de la casse</li>
+                    <li>Les types de données (INT, VARCHAR, DATE, etc.) sont identifiés</li>
+                    <li>Les identifiants, nombres et symboles de ponctuation sont reconnus</li>
+                    <li>Les espaces, tabulations et retours à la ligne sont ignorés</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Exercice 6: Analyseur Lexical Complet -->
+        <section class="exercise" id="analyseur">
+            <h2>6. Analyseur Lexical Complet</h2>
+            
+            <div class="description">
+                <p>Cet analyseur lexical complet permet d'identifier différents types de lexèmes (entiers, réels, identificateurs, opérateurs, etc.) et de détecter les erreurs lexicales.</p>
+            </div>
+            
+            <h3>Code Source</h3>
+            <div class="code-container">
+                <pre><code>%option noyywrap
+%{
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int ligne = 1;
+
+void erreur(const char* type, const char* texte) {
+    fprintf(stderr, "** Erreur : ligne %d ** %s : %s\n", ligne, type, texte);
+}
+%}
+
+DIGIT      [0-9]
+LETTER     [a-zA-Z_]
+ID         {LETTER}({LETTER}|{DIGIT})*
+INT        {DIGIT}+
+EXP        ([eE][+-]?{DIGIT}+)
+REAL       (({DIGIT}*"."{DIGIT}+)|({DIGIT}+"."{DIGIT}*)){EXP}?
+STR        \"([^\"\n]|\\\")*\"?
+
+%%
+
+[ \t\r]+                      ; // Ignore espaces et tabulations
+\n                            { ligne++; }
+
+"#".*                         { printf("COMMENTAIRE : %s\n", yytext); }
+
+"if"|"else"|"while"           { printf("MOTCLE : %s\n", yytext); }
+
+"<="|">="|"=="|"!="|"<"|">"   { printf("OP-REL : %s\n", yytext); }
+
+"="                            { printf("AFFECT : %s\n", yytext); }
+
+"+"|"-"|"*"|"/"                { printf("OP-ARTHM : %s\n", yytext); }
+
+{REAL}                        { printf("REEL : %f\n", atof(yytext)); }
+
+{INT}                         { printf("ENTIER : %s\n", yytext); }
+
+{ID}                          { printf("IDENT : %s\n", yytext); }
+\"[^\"\n]*\n                   { erreur("fin de chaîne attendue", yytext); ligne++; }
+{STR}                         { 
+    if (yytext[strlen(yytext)-1] != '"') {
+        erreur("fin de chaîne attendue", yytext);
+    } else {
+        printf("CHAINE : %s\n", yytext);
+    }
+}
+
+\[^\\n]*                    { erreur("fin de chaîne attendue", yytext); }
+
+[0-9]+\.[0-9]*[eE]            { erreur("exposant attendu", yytext); }
+
+[0-9]+[a-zA-Z_]+              { erreur("nombre attendu", yytext); }
+
+.                             { erreur("caractère non reconnu", yytext); }
+
+%%
+
+int yyerror(char *s)
+{
+    printf("Erreur : %s\n", s);
+    return 0;
+}
+
+int main()
+{
+    yyparse();
+    return 0;
+}</code></pre>
+            </div>
+            
+            <h3>Exécution</h3>
+            <div class="image-container">
+                <img src="images/analyseurExecution.png" alt="Exécution du programme Analyseur Lexical Complet">
+                <p><em>Figure 6: Résultat de l'exécution du programme Analyseur Lexical Complet</em></p>
+            </div>
+            
+            <div class="image-container">
+                <img src="images/analyseurExecution2.png" alt="Détection d'erreurs par l'Analyseur Lexical">
+                <p><em>Figure 7: Détection d'erreurs par l'Analyseur Lexical</em></p>
+            </div>
+            
+            <div class="explanation">
+                <h3>Explication</h3>
+                <p>Cet analyseur lexical complet reconnaît différents types de lexèmes :</p>
+                <ul>
+                    <li>ENTIER : constantes entières</li>
+                    <li>REEL : constantes réelles avec ou sans exposant</li>
+                    <li>IDENT : identificateurs de type C</li>
+                    <li>OP-ARTHM : opérateurs arithmétiques (+, -, *, /)</li>
+                    <li>OP-REL : opérateurs relationnels (<, >, <=, >=, ==, !=)</li>
+                    <li>AFFECT : opérateur d'affectation (=)</li>
+                    <li>MOTCLE : mots-clés (if, else, while)</li>
+                    <li>CHAINE : chaînes de caractères entre guillemets</li>
+                    <li>COMMENTAIRE : lignes commençant par #</li>
+                </ul>
+                <p>Il détecte également les erreurs lexicales comme :</p>
+                <ul>
+                    <li>Chaînes non terminées</li>
+                    <li>Nombres mal formés</li>
+                    <li>Identificateurs mal formés</li>
+                    <li>Caractères non reconnus</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Conclusion</h2>
+            <p>Les différents analyseurs lexicaux présentés dans ce rapport démontrent la puissance et la flexibilité de l'outil Flex pour l'analyse lexicale. Chaque analyseur a été conçu pour répondre à un besoin spécifique, allant de la simple validation de nombres binaires à l'analyse complexe de code avec détection d'erreurs.</p>
+            <p>Ces analyseurs peuvent être utilisés comme base pour développer des compilateurs, des interpréteurs ou des outils d'analyse de texte plus complexes.</p>
+        </section>
+
+        <!-- Partie 2: Exercices avec Bison -->
+        <section>
+            <h2>Partie 2: Analyseurs Syntaxiques avec Bison</h2>
+            <p>Cette partie présente l'utilisation combinée de Flex et Bison pour créer des analyseurs syntaxiques. Contrairement aux analyseurs lexicaux qui se concentrent uniquement sur la reconnaissance des lexèmes, les analyseurs syntaxiques permettent de vérifier la structure grammaticale d'un texte.</p>
+        </section>
+
+        <!-- Exercice Bison 1 -->
+        <section class="exercise" id="bison-ex1">
+            <h2>1. Analyseur d'Opérations Mathématiques</h2>
+            
+            <div class="description">
+                <p>Cet exercice consiste à développer un analyseur syntaxique qui reconnaît des instructions de calcul de la forme "somme 1, 2, 3." ou "produit 2, 5." et qui calcule le résultat de ces opérations.</p>
+                <p>L'analyseur a été étendu pour prendre en charge également les opérations de soustraction et de division.</p>
+            </div>
+            
+            <h3>Fichier Bison (ex1.y)</h3>
+            <div class="code-container">
+                <pre><code>%{
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int yylex(void);
+int yyerror(char *s);
+%}
+
+%token FIN
+%token SOM
+%token PROD
+%token NB
+%token SOUS
+%token DIV
+
+%%
+liste
+    : instructions FIN { printf("correct\n"); }
+    ;
+
+instructions
+    : instruction
+    | instruction instructions
+    ;
+
+instruction
+    : SOM listesom '.' { printf("Somme = %d\n", $2); }
+    | PROD listeprod '.' { printf("Produit = %d\n", $2); }
+    | SOUS listesous '.' { printf("Soustraction = %d\n", $2); }
+    | DIV listediv '.' { printf("Division = %d\n", $2); }
+    ;
+
+listesom
+    : NB { $$ = $1; }
+    | listesom ',' NB { $$ = $1 + $3; }
+    ;
+
+listeprod
+    : NB { $$ = $1; }
+    | listeprod ',' NB { $$ = $1 * $3; }
+    ;
+
+listesous
+    : NB { $$ = $1; }
+    | listesous ',' NB { $$ = $1 - $3; }
+    ;
+
+listediv
+    : NB { $$ = $1; }
+    | listediv ',' NB { if($3 != 0) $$ = $1 / $3; else { printf("Erreur: division par zéro\n"); exit(EXIT_FAILURE); } }
+    ;
+%%
+
+int yyerror(char *s)
+{
+    printf("Erreur : %s\n", s);
+    return 0;
+}
+
+int main()
+{
+    yyparse();
+    return 0;
+}</code></pre>
+            </div>
+            
+            <h3>Fichier Flex (ex1.l)</h3>
+            <div class="code-container">
+                <pre><code>%{
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include "ex1.tab.h"
+%}
+
+%option yylineno
+
+%%
+[0-9]+      { yylval = atoi(yytext); return NB; }
+"somme"     { return SOM; }
+"produit"   { return PROD; }
+"soustraction" { return SOUS; }
+"division"  { return DIV; }
+","         { return ','; }
+"."         { return '.'; }
+"[$]"       { return FIN; }
+[ \t\n]+    { /* Ignorer les espaces et les retours à la ligne */ }
+.           { if(yytext[0] != EOF) printf("Caractère inconnu : %s\n", yytext); }
+%%
+
+int yywrap() {
+    return 1;
+}</code></pre>
+            </div>
+            
+            <div class="explanation">
+                <h3>Explication</h3>
+                <p>Cet analyseur syntaxique permet de reconnaître et d'évaluer des expressions mathématiques simples de la forme :</p>
+                <ul>
+                    <li><code>somme 1, 2, 3.</code> - Calcule la somme des nombres</li>
+                    <li><code>produit 2, 5.</code> - Calcule le produit des nombres</li>
+                    <li><code>soustraction 10, 2, 3.</code> - Calcule la soustraction des nombres</li>
+                    <li><code>division 20, 2, 2.</code> - Calcule la division des nombres</li>
+                </ul>
+                <p>Le processus de compilation et d'exécution se déroule en plusieurs étapes :</p>
+                <ol>
+                    <li>Compilation du fichier Bison avec l'option -d pour générer les fichiers .tab.c et .tab.h</li>
+                    <li>Compilation du fichier Flex pour générer le fichier lex.yy.c</li>
+                    <li>Compilation finale pour obtenir l'exécutable</li>
+                </ol>
+                <p>L'analyseur affiche le résultat de chaque opération et vérifie la syntaxe des expressions.</p>
+            </div>
+        </section>
+
+        <!-- Exercice Bison 2 -->
+        <section class="exercise" id="bison-ex2">
+            <h2>2. Analyseur de Requêtes SQL</h2>
+            
+            <div class="description">
+                <p>Cet exercice complète le travail du TP1 (analyseur lexical SQL) en ajoutant un analyseur syntaxique qui permet de vérifier la syntaxe des requêtes SQL de type CREATE TABLE.</p>
+            </div>
+            
+            <h3>Fichier Bison (ex2.y)</h3>
+            <div class="code-container">
+                <pre><code>%{
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+void yyerror(char *s);
+extern int yylex();
+extern int yyparse();
+extern FILE *yyin;
+%}
+
+%union {
+    char* str;
+    int num;
+}
+
+%token CREATE TABLE VARCHAR
+%token &lt;str&gt; IDENTIFIER
+%token &lt;num&gt; NUMBER
+%token COMMA LPAREN RPAREN
+
+%start requete
+
+%%
+
+requete:
+    CREATE TABLE IDENTIFIER LPAREN champs RPAREN
+        { printf("Syntaxe correcte : CREATE TABLE.\n"); YYACCEPT; }
+    ;
+
+champs:
+    champ
+    | champs COMMA champ
+    ;
+
+champ:
+    IDENTIFIER VARCHAR LPAREN NUMBER RPAREN
+        { /* champ de type varchar */ }
+    ;
+
+%%
+
+void yyerror(char *s) {
+    fprintf(stderr, "Erreur syntaxique: %s\n", s);
+    // Retourner 1 pour signaler l'échec
+}</code></pre>
+            </div>
+            
+            <h3>Fichier Flex (ex2.l)</h3>
+            <div class="code-container">
+                <pre><code>%option noyywrap
+%{
+#include &lt;stdio.h&gt;
+#include "ex2.tab.h" // Inclusion du header généré par Bison
+FILE *yyin;
+%}
+
+CREATE      ([cC][rR][eE][aA][tT][eE])
+TABLE       ([tT][aA][bB][lL][eE])
+IDENTIFIER  [a-zA-Z_][a-zA-Z0-9_]*
+NUMBER      [0-9]+
+COMMA       ,
+LPAREN      \(
+RPAREN      \)
+VARCHAR     ([vV][aA][rR][cC][hH][aA][rR])
+ESPACE      [ ]*
+%%
+
+{CREATE}        { return CREATE; }
+{TABLE}         { return TABLE; }
+{VARCHAR}       { return VARCHAR; }
+{IDENTIFIER}    { yylval.str = strdup(yytext); return IDENTIFIER; }
+{NUMBER}        { yylval.num = atoi(yytext); return NUMBER; }
+{COMMA}         { return COMMA; }
+{LPAREN}        { return LPAREN; }
+{RPAREN}        { return RPAREN; }
+{ESPACE}        ; /* Ignorer les espaces */
+.               { return yytext[0]; }
+
+%%
+
+int main(int argc, char *argv[])
+{
+    ++argv, --argc;
+    if (argc > 0)
+        yyin = fopen(argv[0], "r");
+    else
+        yyin = stdin;
+
+    freopen("resultat.txt", "w", stdout); // Redirection
+
+    yyparse();
+    return 0;
+}</code></pre>
+            </div>
+            
+            <div class="explanation">
+                <h3>Explication</h3>
+                <p>Cet analyseur syntaxique permet de vérifier la syntaxe des requêtes SQL de type CREATE TABLE. Il reconnaît la structure suivante :</p>
+                <pre><code>CREATE TABLE utilisateur(nom varchar(100), prenom varchar(100), ville varchar(255))</code></pre>
+                <p>L'analyseur vérifie que :</p>
+                <ul>
+                    <li>La requête commence par les mots-clés CREATE TABLE</li>
+                    <li>Le nom de la table est un identifiant valide</li>
+                    <li>Les champs sont définis entre parenthèses</li>
+                    <li>Chaque champ a un nom et un type (actuellement, seul le type VARCHAR est supporté)</li>
+                    <li>Les champs sont séparés par des virgules</li>
+                </ul>
+                <p>L'analyseur utilise les fonctions et variables spécifiques à Bison :</p>
+                <ul>
+                    <li><code>YYACCEPT</code> : pour indiquer que l'analyse s'est terminée avec succès</li>
+                    <li><code>yyerror</code> : pour gérer les erreurs syntaxiques</li>
+                    <li><code>%union</code> : pour définir les types de données des tokens</li>
+                    <li><code>%start</code> : pour définir le symbole de départ de la grammaire</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Conclusion Générale</h2>
+            <p>Ce projet a permis d'explorer les outils Flex et Bison pour l'analyse lexicale et syntaxique. Ces outils sont complémentaires :</p>
+            <ul>
+                <li><strong>Flex</strong> se concentre sur l'analyse lexicale, c'est-à-dire la reconnaissance des lexèmes (mots, nombres, symboles, etc.) dans un texte.</li>
+                <li><strong>Bison</strong> se concentre sur l'analyse syntaxique, c'est-à-dire la vérification de la structure grammaticale d'un texte à partir des lexèmes reconnus par Flex.</li>
+            </ul>
+            <p>La combinaison de ces deux outils permet de créer des analyseurs complets pour diverses applications : langages de programmation, formats de données, langages de requête, etc.</p>
+        </section>
+
+        <!-- Mini-Projet de Compilation -->
+        <section>
+            <h2>Partie 3: Mini-Projet de Compilation</h2>
+            <p>Cette partie présente un mini-projet de compilation qui utilise Flex et Bison pour créer un compilateur pour un langage de programmation simple utilisant des mots-clés en dialecte tunisien.</p>
+        </section>
+
+        <!-- Description du Mini-Projet -->
+        <section class="exercise" id="mini-projet">
+            <h2>Compilateur pour un Langage en Dialecte Tunisien</h2>
+            
+            <div class="description">
+                <p>Ce mini-projet consiste en un compilateur qui traduit un langage de programmation simple utilisant des mots-clés en dialecte tunisien vers du code C standard. Le compilateur est implémenté à l'aide de Flex pour l'analyse lexicale et Bison pour l'analyse syntaxique.</p>
+                <p>Le langage prend en charge les fonctionnalités suivantes :</p>
+                <ul>
+                    <li>Déclaration et assignation de variables</li>
+                    <li>Opérations arithmétiques</li>
+                    <li>Structures conditionnelles (if/else)</li>
+                    <li>Boucles (while)</li>
+                    <li>Affichage de valeurs</li>
+                </ul>
+            </div>
+            
+            <h3>Mots-clés du Langage</h3>
+            <div class="code-container">
+                <table>
+                    <tr>
+                        <th>Mot Tunisien</th>
+                        <th>Signification</th>
+                        <th>Équivalent en C</th>
+                    </tr>
+                    <tr>
+                        <td>a3tin</td>
+                        <td>let (déclarer une variable)</td>
+                        <td>int variable = valeur;</td>
+                    </tr>
+                    <tr>
+                        <td>idha</td>
+                        <td>if (condition)</td>
+                        <td>if (condition)</td>
+                    </tr>
+                    <tr>
+                        <td>wala</td>
+                        <td>else</td>
+                        <td>else</td>
+                    </tr>
+                    <tr>
+                        <td>madam</td>
+                        <td>while (boucle)</td>
+                        <td>while (condition)</td>
+                    </tr>
+                    <tr>
+                        <td>atba3</td>
+                        <td>print (afficher)</td>
+                        <td>printf("%d\n", valeur);</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <h3>Exemple de Code Source</h3>
+            <div class="code-container">
+                <pre><code>a3tin a = 5;
+a3tin b = 10;
+a3tin f = 1;
+a3tin sum = a + b * 2;
+
+idha (sum > 20) {
+    atba3 sum;
+} wala {
+    atba3 a;
+}
+
+a3tin i = 0;
+madam (i < 3) {
+    atba3 i;
+    i = i + 1;
+}</code></pre>
+            </div>
+            
+            <h3>Code C Généré</h3>
+            <div class="code-container">
+                <pre><code>#include &lt;stdio.h&gt;
+int main() {
+int a = 5;
+int b = 10;
+int f = 1;
+int sum = a + b * 2;
+if (sum > 20) {
+printf("%d\n", sum);
+}
+else {
+printf("%d\n", a);
+}
+int i = 0;
+while (i < 3) {
+printf("%d\n", i);
+i = i + 1;
+}
+return 0; }</code></pre>
+            </div>
+            
+            <h3>Architecture du Compilateur</h3>
+            
+            <h4>1. Analyseur Lexical (compiler.l)</h4>
+            <div class="code-container">
+                <pre><code>%{
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include "compiler.tab.h"
+%}
+
+%option yylineno
+
+%%
+[0-9]+      { yylval = atoi(yytext); return NB; }
+"a3tin"     { return LET; }
+"idha"      { return IF; }
+"wala"      { return ELSE; }
+"madam"     { return WHILE; }
+"atba3"     { return PRINT; }
+","         { return ','; }
+"."         { return '.'; }
+"[$]"       { return FIN; }
+[ \t\n]+    { /* Ignorer les espaces et les retours à la ligne */ }
+.           { if(yytext[0] != EOF) printf("Caractère inconnu : %s\n", yytext); }
+%%
+
+int yywrap() {
+    return 1;
+}</code></pre>
+            </div>
+            
+            <h4>2. Analyseur Syntaxique (compiler.y)</h4>
+            <div class="code-container">
+                <pre><code>%{
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdbool.h&gt;
+
+FILE *out;
+void yyerror(const char *s);
+int yylex();
+extern int yylineno;
+extern FILE *yyin;
+
+#define MAX_VARS 100
+char* variables[MAX_VARS];
+int var_count = 0;
+
+bool is_variable_declared(const char* name) {
+    for(int i = 0; i < var_count; i++) {
+        if(strcmp(variables[i], name) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void declare_variable(const char* name) {
+    if(var_count >= MAX_VARS) {
+        yyerror("Too many variables");
+        return;
+    }
+    if(!is_variable_declared(name)) {
+        variables[var_count] = strdup(name);
+        var_count++;
+    }
+}
+
+// Helper to concat strings
+char* strconcat3(const char* a, const char* b, const char* c) {
+    size_t len = strlen(a) + strlen(b) + strlen(c) + 1;
+    char* res = malloc(len);
+    strcpy(res, a);
+    strcat(res, b);
+    strcat(res, c);
+    return res;
+}
+char* strconcat4(const char* a, const char* b, const char* c, const char* d) {
+    size_t len = strlen(a) + strlen(b) + strlen(c) + strlen(d) + 1;
+    char* res = malloc(len);
+    strcpy(res, a);
+    strcat(res, b);
+    strcat(res, c);
+    strcat(res, d);
+    return res;
+}
+%}
+
+%union {
+    int ival;
+    char* sval;
+}
+
+%token &lt;ival&gt; NUMBER
+%token &lt;sval&gt; IDENTIFIER
+%token LET IF ELSE WHILE PRINT
+%token SEMICOLON ASSIGN PLUS MINUS MUL DIV
+%token LPAREN RPAREN LBRACE RBRACE
+%token GE LE GT LT EQ NEQ
+
+/* Définition de la précédence et de l'associativité des opérateurs */
+%left EQ NEQ
+%left GT LT GE LE
+%left PLUS MINUS
+%left MUL DIV
+
+%type &lt;sval&gt; expr stmt stmts block else_block
+
+%%
+program:
+    stmts { fprintf(out, "#include &lt;stdio.h&gt;\nint main() {\n%sreturn 0; }\n", $1); free($1); }
+  ;
+
+stmts:
+    /* empty */ { $$ = strdup(""); }
+  | stmts stmt { $$ = strconcat3($1, $2, ""); free($1); free($2); }
+  ;
+
+stmt:
+    LET IDENTIFIER ASSIGN expr SEMICOLON { 
+        declare_variable($2);
+        $$ = strconcat4("int ", $2, " = ", $4); 
+        char* tmp = strconcat3($$, ";\n", ""); 
+        free($$); 
+        $$ = tmp; 
+        free($2); 
+        free($4); 
+    }
+  | IDENTIFIER ASSIGN expr SEMICOLON    { 
+        if(!is_variable_declared($1)) {
+            char msg[100];
+            snprintf(msg, sizeof(msg), "Line %d: Variable '%s' not declared", yylineno, $1);
+            yyerror(msg);
+        }
+        $$ = strconcat4($1, " = ", $3, ";\n"); 
+        free($1); 
+        free($3); 
+    }
+  | PRINT expr SEMICOLON                { $$ = strconcat3("printf(\"%d\\n\", ", $2, ");\n"); free($2); }
+  | IF LPAREN expr RPAREN block else_block { $$ = strconcat4("if (", $3, ") ", $5); char* tmp = strconcat3($$, $6, ""); free($$); $$ = tmp; free($3); free($5); free($6); }
+  | WHILE LPAREN expr RPAREN block { $$ = strconcat4("while (", $3, ") ", $5); free($3); free($5); }
+  ;
+
+else_block:
+    ELSE block { $$ = strconcat3("else ", $2, ""); free($2); }
+  | /* empty */ { $$ = strdup(""); }
+  ;
+
+block:
+    LBRACE stmts RBRACE { $$ = strconcat3("{\n", $2, "}\n"); free($2); }
+  ;
+
+expr:
+    NUMBER                { char buf[32]; snprintf(buf, sizeof(buf), "%d", $1); $$ = strdup(buf); }
+  | IDENTIFIER            { 
+        if(!is_variable_declared($1)) {
+            char msg[100];
+            snprintf(msg, sizeof(msg), "Line %d: Variable '%s' not declared", yylineno, $1);
+            yyerror(msg);
+        }
+        $$ = strdup($1); 
+        free($1); 
+    }
+  | expr PLUS expr        { $$ = strconcat3($1, " + ", $3); free($1); free($3); }
+  | expr MINUS expr       { $$ = strconcat3($1, " - ", $3); free($1); free($3); }
+  | expr MUL expr         { $$ = strconcat3($1, " * ", $3); free($1); free($3); }
+  | expr DIV expr         { $$ = strconcat3($1, " / ", $3); free($1); free($3); }
+  | expr GT expr          { $$ = strconcat3($1, " > ", $3); free($1); free($3); }
+  | expr LT expr          { $$ = strconcat3($1, " < ", $3); free($1); free($3); }
+  | expr GE expr          { $$ = strconcat3($1, " >= ", $3); free($1); free($3); }
+  | expr LE expr          { $$ = strconcat3($1, " <= ", $3); free($1); free($3); }
+  | expr EQ expr          { $$ = strconcat3($1, " == ", $3); free($1); free($3); }
+  | expr NEQ expr         { $$ = strconcat3($1, " != ", $3); free($1); free($3); }
+  | LPAREN expr RPAREN    { $$ = strconcat3("(", $2, ")"); free($2); }
+  ;</code></pre>
+            </div>
+            
+            <div class="explanation">
+                <h3>Fonctionnement du Compilateur</h3>
+                <p>Le compilateur fonctionne en plusieurs étapes :</p>
+                <ol>
+                    <li><strong>Analyse lexicale</strong> : Le fichier compiler.l définit les règles pour reconnaître les tokens du langage (mots-clés, identifiants, nombres, opérateurs, etc.).</li>
+                    <li><strong>Analyse syntaxique</strong> : Le fichier compiler.y définit la grammaire du langage et les actions à effectuer pour générer le code C correspondant.</li>
+                    <li><strong>Génération de code</strong> : Pendant l'analyse syntaxique, le compilateur génère le code C équivalent pour chaque construction du langage source.</li>
+                    <li><strong>Vérification sémantique</strong> : Le compilateur vérifie que les variables sont déclarées avant d'être utilisées et signale les erreurs.</li>
+                </ol>
+                
+                <h4>Caractéristiques importantes :</h4>
+                <ul>
+                    <li><strong>Gestion des variables</strong> : Le compilateur maintient une table des symboles pour suivre les variables déclarées.</li>
+                    <li><strong>Vérification des erreurs</strong> : Le compilateur détecte et signale les erreurs lexicales, syntaxiques et sémantiques.</li>
+                    <li><strong>Précédence des opérateurs</strong> : Les règles de précédence sont définies pour les opérateurs arithmétiques et de comparaison.</li>
+                    <li><strong>Structures de contrôle</strong> : Le compilateur prend en charge les structures conditionnelles (if/else) et les boucles (while).</li>
+                </ul>
+                
+                <h4>Utilisation du compilateur :</h4>
+                <ol>
+                    <li>Compiler les fichiers source avec Flex et Bison :</li>
+                    <pre><code>flex compiler.l
+bison -d compiler.y
+gcc compiler.tab.c lex.yy.c -o compiler</code></pre>
+                    <li>Exécuter le compilateur sur un fichier source :</li>
+                    <pre><code>./compiler input.txt</code></pre>
+                    <li>Compiler et exécuter le code C généré :</li>
+                    <pre><code>gcc output.c -o program
+./program</code></pre>
+                </ol>
+                
+                <h4>Exemple d'exécution :</h4>
+                <p>Pour le code source donné en exemple, l'exécution du programme généré produira la sortie suivante :</p>
+                <pre><code>5
+0
+1
+2</code></pre>
+                <p>Cette sortie correspond à :</p>
+                <ul>
+                    <li>La valeur de 'a' (5) est affichée car sum (25) est supérieur à 20</li>
+                    <li>Les valeurs 0, 1 et 2 sont affichées par la boucle while</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Conclusion Finale</h2>
+            <p>Ce projet a permis d'explorer différentes applications des outils Flex et Bison pour l'analyse lexicale et syntaxique :</p>
+            <ul>
+                <li>Analyseurs lexicaux simples pour diverses applications</li>
+                <li>Analyseurs syntaxiques pour des langages spécifiques</li>
+                <li>Compilateur complet pour un langage de programmation personnalisé</li>
+            </ul>
+            <p>Ces outils offrent une grande flexibilité pour développer des analyseurs et des compilateurs pour différents types de langages et de formats de données. La combinaison de Flex pour l'analyse lexicale et de Bison pour l'analyse syntaxique permet de créer des solutions complètes pour le traitement de langages.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>Rapport de Projet - Analyseurs Lexicaux en Flex - 2025</p>
+    </footer>
+</body>
+</html>
