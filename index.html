@@ -94,8 +94,8 @@
 
 
     <main>
-        <section style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; margin-bottom: 50px; page-break-after: always;">
-            <div style="border: 2px solid #3498db; padding: 40px; border-radius: 10px; width: 80%; max-width: 800px;">
+        <section style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; margin-bottom: 100px;">
+            <div style="border: 2px solid #3498db; padding: 40px; border-radius: 10px; width: 80%;">
                 <h1 style="color: #2c3e50; font-size: 28px; margin-bottom: 30px;">MINI-PROJET DE COMPILATION</h1>
                 
                 <h2 style="color: #3498db; font-size: 24px; margin-bottom: 20px;">Compilateur pour un Langage en Dialecte Tunisien</h2>
@@ -105,7 +105,7 @@
                     <ul style="list-style: none; padding: 0; font-size: 18px;">
                         <li>Montassar TAYACHI</li>
                         <li>Mohamed Habib HAFIENE</li>
-                        <li>Haroun HELAIL</li>
+                        <li>Haroun HELALI</li>
                     </ul>
                 </div>
                 
@@ -439,6 +439,12 @@ int yywrap() {
                 </ol>
                 <p>L'analyseur affiche le résultat de chaque opération et vérifie la syntaxe des expressions.</p>
             </div>
+            
+            <h3>Exécution</h3>
+            <div class="image-container">
+                <img src="images complemment/Calculatrice avec Bison execution.jpg" alt="Exécution de la calculatrice avec Bison" style="max-width: 100%; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 15px;">
+                <p><em>Figure 4: Résultat de l'exécution de la calculatrice avec Bison</em></p>
+            </div>
         </section>
 
         <!-- Exercice 6: SQL Bison -->
@@ -567,6 +573,12 @@ int main(int argc, char *argv[])
                     <li><code>%union</code> : pour définir les types de données des tokens</li>
                     <li><code>%start</code> : pour définir le symbole de départ de la grammaire</li>
                 </ul>
+            </div>
+            
+            <h3>Exécution</h3>
+            <div class="image-container">
+                <img src="images complemment/Analyseur SQL avec Bison execution.jpg" alt="Exécution de l'analyseur SQL avec Bison" style="max-width: 100%; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 15px;">
+                <p><em>Figure 5: Résultat de l'exécution de l'analyseur SQL avec Bison</em></p>
             </div>
         </section>
 
@@ -851,7 +863,7 @@ expr:
                 <h3>Fonctionnement du Compilateur</h3>
                 <p>Le compilateur fonctionne en plusieurs étapes :</p>
                 <ol>
-                    <li><strong>Analyse lexicale</strong> : Le fichier compiler.l définit les règles pour reconnaître les tokens du langage (mots-clés, identifiants, nombres, opérateurs, etc.).</li>
+                    <li><strong>Analyse lexicale</strong> : Le fichier compiler.l définit les règles pour reconnaître les tokens du langage (mots-clés, identifiants, nombres, opérateurs).</li>
                     <li><strong>Analyse syntaxique</strong> : Le fichier compiler.y définit la grammaire du langage et les actions à effectuer pour générer le code C correspondant.</li>
                     <li><strong>Génération de code</strong> : Pendant l'analyse syntaxique, le compilateur génère le code C équivalent pour chaque construction du langage source.</li>
                     <li><strong>Vérification sémantique</strong> : Le compilateur vérifie que les variables sont déclarées avant d'être utilisées et signale les erreurs.</li>
@@ -878,17 +890,18 @@ gcc compiler.tab.c lex.yy.c -o compiler</code></pre>
 ./program</code></pre>
                 </ol>
                 
-                <h4>Exemple d'exécution :</h4>
-                <p>Pour le code source donné en exemple, l'exécution du programme généré produira la sortie suivante :</p>
-                <pre><code>5
-0
-1
-2</code></pre>
-                <p>Cette sortie correspond à :</p>
-                <ul>
-                    <li>La valeur de 'a' (5) est affichée car sum (25) est supérieur à 20</li>
-                    <li>Les valeurs 0, 1 et 2 sont affichées par la boucle while</li>
-                </ul>
+                <h3>Exécution</h3>
+                <div class="image-container">
+                    <figure>
+                        <img src="images complemment/mini projet execution.png" alt="Exécution du mini projet" style="max-width: 100%; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 15px;">
+                        <figcaption>Exécution réussie du mini projet</figcaption>
+                    </figure>
+                    
+                    <figure>
+                        <img src="images complemment/mini projet execution pour detecter un erorr.png" alt="Détection d'erreur dans le mini projet" style="max-width: 100%; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 15px;">
+                        <figcaption>Détection d'erreur dans le mini projet</figcaption>
+                    </figure>
+                </div>
             </div>
         </section>
 
